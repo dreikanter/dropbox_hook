@@ -56,11 +56,16 @@ def notify(url, secret, user):
 
     body = json.dumps({ 'delta': { 'users': user } })
 
+    if sys.version > '3':
+        signature = hmac.new(secret.encode(), body.encode(), sha256)
+    else:
+        signature = hmac.new(str(secret), body, sha256)
+
     response = requests.post(
         url,
         data=body,
         headers={
-            'X-Dropbox-Signature': hmac.new(str(secret), body, sha256).hexdigest()
+            'X-Dropbox-Signature': signature.hexdigest()
         })
     if response.status_code == 200:
         print('Webhook invoked successfully.')
