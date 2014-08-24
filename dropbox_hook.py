@@ -33,16 +33,16 @@ def verify(url, challenge):
     response = requests.get(url, params={ 'challenge': challenge })
     if response.status_code == 200:
         if response.text == challenge:
-            print 'Verification passed!'
+            print('Verification passed!')
         else:
             text = response.text
             if len(text) > 30:
                 text = '(truncated) "%s..."' % text[:30]
             else:
                 text = '"%s"' % text
-            print 'Invalid verification response. Expected "%s", but server responded with %s' % (challenge, text)
+            print('Invalid verification response. Expected "%s", but server responded with %s' % (challenge, text))
     else:
-        print 'Invalid verification response. Server responded with status code %d.' % response.status_code
+        print('Invalid verification response. Server responded with status code %d.' % response.status_code)
 
 @cli.command()
 @click.argument('url', metavar='URL', required=True)
@@ -63,9 +63,9 @@ def notify(url, secret, user):
             'X-Dropbox-Signature': hmac.new(str(secret), body, sha256).hexdigest()
         })
     if response.status_code == 200:
-        print 'Webhook invoked successfully.'
+        print('Webhook invoked successfully.')
     else:
-        print 'Invalid webhook response. Server responded with status code %d.' % response.status_code
+        print('Invalid webhook response. Server responded with status code %d.' % response.status_code)
         sys.exit(1)
 
 if __name__=='__main__':
